@@ -97,6 +97,7 @@
     vertical-align: top;
     font-size: 0.8125rem;
     max-width: 100%;
+    min-width: min(290px, 50vw);
 }
 
 #toolbar #searchbar:focus {
