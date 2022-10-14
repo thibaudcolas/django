@@ -76,7 +76,18 @@ class Permission(models.Model):
         ordering = ["content_type__app_label", "content_type__model", "codename"]
 
     def __str__(self):
-        return "%s | %s" % (self.content_type, self.name)
+        names = { "verbose_name_plural": self.content_type.name_plural, "app_verbose_name": self.content_type.app_verbose_name }
+
+        if "Can add" in self.name:
+            return _("Can add %(verbose_name_plural)s | %(app_verbose_name)s") % names
+        if "Can change" in self.name:
+            return _("Can change %(verbose_name_plural)s | %(app_verbose_name)s") % names
+        if "Can delete" in self.name:
+            return _("Can delete %(verbose_name_plural)s | %(app_verbose_name)s") % names
+        if "Can view" in self.name:
+            return _("Can view %(verbose_name_plural)s | %(app_verbose_name)s") % names
+
+        return "%s | %s | %s" % (self.name, self.content_type.name_plural, self.content_type.app_verbose_name)
 
     def natural_key(self):
         return (self.codename,) + self.content_type.natural_key()
