@@ -158,13 +158,6 @@ class ContentType(models.Model):
         return str(model._meta.verbose_name)
 
     @property
-    def name_plural(self):
-        model = self.model_class()
-        if not model:
-            return self.model
-        return str(model._meta.verbose_name_plural)
-
-    @property
     def app_labeled_name(self):
         model = self.model_class()
         if not model:
@@ -173,13 +166,6 @@ class ContentType(models.Model):
             model._meta.app_config.verbose_name,
             model._meta.verbose_name,
         )
-
-    @property
-    def app_verbose_name(self):
-        model = self.model_class()
-        if not model:
-            return ""
-        return apps.get_app_config(model._meta.app_label).verbose_name
 
     def model_class(self):
         """Return the model class for this type of content."""
