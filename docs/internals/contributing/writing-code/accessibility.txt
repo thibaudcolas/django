@@ -2,8 +2,11 @@
 Accessibility
 =============
 
-The Django project is committed to being accessible to everyone in all possible ways.
-We work to conform to established accessibility standards, and also to meet our own targets for supporting specific input devices and assistive technologies.
+The Django project is committed to being accessible to everyone
+in all possible ways.
+We work to conform to established accessibility standards,
+and also to meet our own targets for supporting specific input devices
+and assistive technologies.
 
 .. _accessibility-standards:
 
@@ -37,15 +40,23 @@ Accessibility support targets
 =============================
 
 Beyond standards, we want to make sure Django actually works for people using
-a wide range of input devices and assistive technologies.
+a wide range of input devices and assistive technologies. This has benefits
+to make sure Django works better `for everyone`_.
 The best way to do this effectively is to take accessibility considerations
 into account as part of designing features. If in doubt, consult
 with users who rely on assistive technologies or with accessibility experts.
+
+.. _for everyone: https://en.wikipedia.org/wiki/Curb_cut_effect
 
 .. _accessibility-testing-baseline:
 
 Accessibility testing baseline
 ------------------------------
+
+Design the UI with accessibility in mind,
+and the testing will only be needed as a final check. For more complex
+interfaces, confer with other contributors to decide on testing targets.
+Reach out to the `Accessibility team`_ for support and to coordinate testing
 
 Always test user interface changes with:
 
@@ -58,10 +69,6 @@ Where appropriate, also test with:
 * Touch-only navigation
 * 400% browser zoom
 * Forced-colors mode (for example Windows Contrast Themes)
-
-Design the UI with accessibility in mind,
-and the testing will only be needed as a final check. For more complex
-interfaces, confer with other contributors to decide on testing targets.
 
 .. _assistive-technologies:
 
