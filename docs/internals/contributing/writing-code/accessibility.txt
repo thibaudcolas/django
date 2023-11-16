@@ -2,32 +2,32 @@
 Accessibility
 =============
 
-All aspects of Django must be compatible with our accessibility standards,
-and with the specific support targets we aim for.
+The Django project is committed to being accessible to everyone in all possible ways.
+We work to conform to established accessibility standards, and also to meet our own targets for supporting specific input devices and assistive technologies.
 
 .. _accessibility-standards:
 
 Accessibility standards
 =======================
 
-Django aims for conformance with `WCAG 2.2`_ at the AA level.
-WCAG is the most well established standard for web accessibility. AA-level
-guidelines are the most common legal compliance target around the world.
+Django aims for conformance with the `Web Content Accessibility Guidelines (WCAG), version 2.2`_, at the AA level.
+WCAG is the most established standard for web accessibility. AA-level
+guidelines are the most common legal compliance target worldwide.
 
-Wherever applicable, we also attempt to follow other best practices, such as:
+We also attempt to follow other best practices, such as:
 
 * WCAG 2.2 AAA-level guidelines.
 * The upcoming `WCAG 3.0`_ guidelines.
-* `ATAG 2.0`_ guidelines for authoring tools.
+* `Authoring Tool Accessibility Guidelines (ATAG) 2.0`_  – guidelines for software and services that are used to produce web content.
 
 .. note::
     Do you want to learn more about accessibility without diving straight into
     standards? We recommend `The A11Y Project`_,
     a community-driven effort to make digital accessibility easier.
 
-.. _WCAG 2.2: https://www.w3.org/TR/WCAG22/
+.. _Web Content Accessibility Guidelines (WCAG), version 2.2: https://www.w3.org/TR/WCAG22/
 .. _WCAG 3.0: https://www.w3.org/TR/wcag-3.0/
-.. _ATAG 2.0: https://www.w3.org/TR/ATAG20/
+.. _Authoring Tool Accessibility Guidelines (ATAG) 2.0: https://www.w3.org/TR/ATAG20/
 .. _The A11Y Project: https://www.a11yproject.com/
 
 .. _accessibility-support-targets:
@@ -46,17 +46,20 @@ with users who rely on assistive technologies or with accessibility experts.
 Accessibility testing baseline
 ------------------------------
 
- Always test user interface changes with:
+Always test user interface changes with:
 
 * Keyboard-only navigation
-* Automated checks in the `Accessibility Insights`_ browser extension,
+* The `Accessibility Insights`_ browser extension's automated checks feature,
   or an equivalent tool with the `Axe`_ checker.
 
 Where appropriate, also test with:
 
 * Touch-only navigation
 * 400% browser zoom
-* forced-colors mode DevTools emulation
+* Forced-colors mode (e.g., Windows Contrast Themes)
+  * `Can be emulated with Chrome/Edge dev tools`_
+  
+.. _Can be emulated with Chrome/Edge dev tools: https://devtoolstips.org/tips/en/emulate-forced-colors/
 
 .. note::
     How much should you test? Devise the UI with accessibility in mind,
@@ -99,8 +102,8 @@ Where expert help is available, also consider testing with:
 Known issues and how to help
 ============================
 
-Parts of Django do not meet our accessibility targets at the moment.
-We actively work on fixing issues both as part of ongoing maintenance,
+There are some parts of Django that do not meet our accessibility targets at the moment.
+We actively work on fixing issues, both as part of ongoing maintenance
 and bigger overhauls. To learn about known issues, and get involved, see:
 
 * ``#accessibility`` on the `Django Discord server`_.
