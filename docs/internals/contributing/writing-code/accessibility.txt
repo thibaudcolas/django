@@ -10,24 +10,25 @@ We work to conform to established accessibility standards, and also to meet our 
 Accessibility standards
 =======================
 
-Django aims for conformance with the `Web Content Accessibility Guidelines (WCAG), version 2.2`_, at the AA level.
-WCAG is the most established standard for web accessibility. AA-level
-guidelines are the most common legal compliance target worldwide.
+We work to conform with the `Web Content Accessibility Guidelines`_ (WCAG),
+version 2.2, at the AA level.
+WCAG is the most established standard for web accessibility.
+AA-level guidelines are the most common legal compliance target worldwide.
 
 We also attempt to follow other best practices, such as:
 
 * WCAG 2.2 AAA-level guidelines.
 * The upcoming `WCAG 3.0`_ guidelines.
-* `Authoring Tool Accessibility Guidelines (ATAG) 2.0`_  – guidelines for software and services that are used to produce web content.
+* `Authoring Tool Accessibility Guidelines`_ (ATAG) 2.0 – guidelines
+  for software and services that are used to produce web content.
 
-.. note::
-    Do you want to learn more about accessibility without diving straight into
-    standards? We recommend `The A11Y Project`_,
-    a community-driven effort to make digital accessibility easier.
+To learn more about accessibility without diving straight into standards,
+we recommend `The A11Y Project`_, a community-driven effort
+to make digital accessibility easier.
 
-.. _Web Content Accessibility Guidelines (WCAG), version 2.2: https://www.w3.org/TR/WCAG22/
+.. _Web Content Accessibility Guidelines: https://www.w3.org/TR/WCAG22/
 .. _WCAG 3.0: https://www.w3.org/TR/wcag-3.0/
-.. _Authoring Tool Accessibility Guidelines (ATAG) 2.0: https://www.w3.org/TR/ATAG20/
+.. _Authoring Tool Accessibility Guidelines: https://www.w3.org/TR/ATAG20/
 .. _The A11Y Project: https://www.a11yproject.com/
 
 .. _accessibility-support-targets:
@@ -56,15 +57,11 @@ Where appropriate, also test with:
 
 * Touch-only navigation
 * 400% browser zoom
-* Forced-colors mode (e.g., Windows Contrast Themes)
-  * `Can be emulated with Chrome/Edge dev tools`_
-  
-.. _Can be emulated with Chrome/Edge dev tools: https://devtoolstips.org/tips/en/emulate-forced-colors/
+* Forced-colors mode (for example Windows Contrast Themes)
 
-.. note::
-    How much should you test? Devise the UI with accessibility in mind,
-    and the testing will only be needed as a final check. For more complex
-    interfaces, confer with other contributors to decide on testing targets.
+Design the UI with accessibility in mind,
+and the testing will only be needed as a final check. For more complex
+interfaces, confer with other contributors to decide on testing targets.
 
 .. _assistive-technologies:
 
@@ -72,10 +69,11 @@ Assistive technologies
 ----------------------
 
 Where more extensive testing is appropriate,
-here are free assistive technologies we recommend testing with:
+here are popular free assistive technologies we recommend testing with:
 
 * `NVDA`_ on Windows with Firefox ESR
 * `VoiceOver`_ on macOS with Safari
+* `Orca`_ on Linux with Firefox ESR
 * `Narrator`_ on Windows with Microsoft Edge
 * Windows Magnifier and macOS Zoom
 * Windows Speech Recognition and macOS Voice Control
@@ -96,6 +94,7 @@ Where expert help is available, also consider testing with:
 .. _Contrast themes: https://support.microsoft.com/en-us/windows/change-color-contrast-in-windows-fedc744c-90ac-69df-aed5-c8a90125e696
 .. _JAWS: https://www.freedomscientific.com/products/software/jaws/
 .. _Dragon: https://www.nuance.com/en-gb/dragon.html
+.. _Orca: https://help.gnome.org/users/orca/stable/
 
 .. _accessibility-known-issues-how-to-help:
 
