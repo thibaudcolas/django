@@ -7215,6 +7215,7 @@ class UserAdminTest(TestCase):
             reverse("admin:auth_user_add"),
             {
                 "username": "newuser",
+                "usable_password": "true",
                 "password1": "newpassword",
                 "password2": "newpassword",
             },
@@ -7234,6 +7235,7 @@ class UserAdminTest(TestCase):
                 "username": "newuser",
                 "password1": "newpassword",
                 "password2": "newpassword",
+                "usable_password": "true",
                 "_continue": "1",
             },
         )
@@ -7363,6 +7365,7 @@ class UserAdminTest(TestCase):
             reverse("admin:auth_user_add"),
             {
                 "username": "newuser",
+                "usable_password": "true",
                 "password1": "newpassword",
                 "password2": "newpassword",
                 "_addanother": "1",

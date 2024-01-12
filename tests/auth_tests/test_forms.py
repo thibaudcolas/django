@@ -100,7 +100,7 @@ class BaseUserCreationFormTest(TestDataMixin, TestCase):
 
     def test_both_passwords(self):
         # One (or both) passwords weren't given
-        data = {"username": "jsmith"}
+        data = {"username": "jsmith", "usable_password": "true"}
         form = BaseUserCreationForm(data)
         required_error = [str(Field.default_error_messages["required"])]
         self.assertFalse(form.is_valid())
@@ -118,6 +118,7 @@ class BaseUserCreationFormTest(TestDataMixin, TestCase):
         # The success case.
         data = {
             "username": "jsmith@example.com",
+            "usable_password": "true",
             "password1": "test123",
             "password2": "test123",
         }
@@ -369,6 +370,7 @@ class UserCreationFormTest(TestDataMixin, TestCase):
     def test_case_insensitive_username(self):
         data = {
             "username": "TeStClIeNt",
+            "usable_password": "true",
             "password1": "test123",
             "password2": "test123",
         }
@@ -378,6 +380,17 @@ class UserCreationFormTest(TestDataMixin, TestCase):
             form["username"].errors,
             ["A user with that username already exists."],
         )
+
+    def test_unusable_password(self):
+        data = {
+            "username": "new-user-which-does-not-exist",
+            "usable_password": "false",
+        }
+        form = UserCreationForm(data)
+        self.assertTrue(form.is_valid())
+        u = form.save()
+        self.assertEqual(u.username, data["username"])
+        self.assertFalse(u.has_usable_password())
 
     @override_settings(AUTH_USER_MODEL="auth_tests.ExtensionUser")
     def test_case_insensitive_username_custom_user_and_error_message(self):
@@ -397,6 +410,7 @@ class UserCreationFormTest(TestDataMixin, TestCase):
         )
         data = {
             "username": "TeStClIeNt",
+            "usable_password": "true",
             "password1": "test123",
             "password2": "test123",
             "date_of_birth": "1980-01-01",
@@ -680,6 +694,7 @@ class SetPasswordFormTest(TestDataMixin, TestCase):
         # The two new passwords do not match.
         user = User.objects.get(username="testclient")
         data = {
+            "usable_password": "true",
             "new_password1": "abc123",
             "new_password2": "abc",
         }
@@ -694,6 +709,7 @@ class SetPasswordFormTest(TestDataMixin, TestCase):
     def test_success(self, password_changed):
         user = User.objects.get(username="testclient")
         data = {
+            "usable_password": "true",
             "new_password1": "abc123",
             "new_password2": "abc123",
         }
@@ -741,7 +757,10 @@ class SetPasswordFormTest(TestDataMixin, TestCase):
 
     def test_no_password(self):
         user = User.objects.get(username="testclient")
-        data = {"new_password1": "new-password"}
+        data = {
+            "usable_password": "true",
+            "new_password1": "new-password",
+        }
         form = SetPasswordForm(user, data)
         self.assertIs(form.is_valid(), False)
         self.assertEqual(
@@ -759,6 +778,7 @@ class SetPasswordFormTest(TestDataMixin, TestCase):
     def test_password_whitespace_not_stripped(self):
         user = User.objects.get(username="testclient")
         data = {
+            "usable_password": "true",
             "new_password1": "   password   ",
             "new_password2": "   password   ",
         }
@@ -855,6 +875,42 @@ class PasswordChangeFormTest(TestDataMixin, TestCase):
         self.assertEqual(password_changed.call_count, 0)
         form.save()
         self.assertEqual(password_changed.call_count, 1)
+
+    @override_settings(
+        AUTH_PASSWORD_VALIDATORS=[
+            {
+                "NAME": (
+                    "django.contrib.auth.password_validation."
+                    "UserAttributeSimilarityValidator"
+                )
+            },
+            {
+                "NAME": (
+                    "django.contrib.auth.password_validation.MinimumLengthValidator"
+                ),
+                "OPTIONS": {
+                    "min_length": 12,
+                },
+            },
+        ]
+    )
+    def test_validates_password(self):
+        user = User.objects.get(username="testclient")
+        data = {
+            "new_password1": "testclient",
+            "new_password2": "testclient",
+        }
+        form = PasswordChangeForm(user, data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(len(form["new_password2"].errors), 2)
+        self.assertIn(
+            "The password is too similar to the username.",
+            form["new_password2"].errors,
+        )
+        self.assertIn(
+            "This password is too short. It must contain at least 12 characters.",
+            form["new_password2"].errors,
+        )
 
     def test_field_order(self):
         # Regression test - check the order of fields:
@@ -1313,6 +1369,7 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
     def test_success(self, password_changed):
         user = User.objects.get(username="testclient")
         data = {
+            "usable_password": "true",
             "password1": "test123",
             "password2": "test123",
         }
@@ -1363,6 +1420,7 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
     def test_password_whitespace_not_stripped(self):
         user = User.objects.get(username="testclient")
         data = {
+            "usable_password": "true",
             "password1": " pass ",
             "password2": " pass ",
         }
@@ -1374,7 +1432,11 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
 
     def test_non_matching_passwords(self):
         user = User.objects.get(username="testclient")
-        data = {"password1": "password1", "password2": "password2"}
+        data = {
+            "usable_password": "true",
+            "password1": "password1",
+            "password2": "password2",
+        }
         form = AdminPasswordChangeForm(user, data)
         self.assertEqual(
             form.errors["password2"], [form.error_messages["password_mismatch"]]
@@ -1383,7 +1445,11 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
 
     def test_missing_passwords(self):
         user = User.objects.get(username="testclient")
-        data = {"password1": "", "password2": ""}
+        data = {
+            "usable_password": "true",
+            "password1": "",
+            "password2": "",
+        }
         form = AdminPasswordChangeForm(user, data)
         required_error = [Field.default_error_messages["required"]]
         self.assertEqual(form.errors["password1"], required_error)
@@ -1392,12 +1458,26 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
 
     def test_one_password(self):
         user = User.objects.get(username="testclient")
-        form1 = AdminPasswordChangeForm(user, {"password1": "", "password2": "test"})
+        form1 = AdminPasswordChangeForm(
+            user,
+            {
+                "usable_password": "true",
+                "password1": "",
+                "password2": "test",
+            },
+        )
         required_error = [Field.default_error_messages["required"]]
         self.assertEqual(form1.errors["password1"], required_error)
         self.assertNotIn("password2", form1.errors)
         self.assertEqual(form1.changed_data, [])
-        form2 = AdminPasswordChangeForm(user, {"password1": "test", "password2": ""})
+        form2 = AdminPasswordChangeForm(
+            user,
+            {
+                "usable_password": "true",
+                "password1": "test",
+                "password2": "",
+            },
+        )
         self.assertEqual(form2.errors["password2"], required_error)
         self.assertNotIn("password1", form2.errors)
         self.assertEqual(form2.changed_data, [])
@@ -1414,3 +1494,17 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
                 self.assertEqual(
                     form.fields[field_name].widget.attrs["autocomplete"], autocomplete
                 )
+
+    def test_unusable_password(self):
+        """Deselecting usable password sets an unusable password"""
+        user = User.objects.get(username="testclient")
+        form = AdminPasswordChangeForm(
+            user,
+            {"password1": "", "password2": "test"},
+        )
+
+        valid = form.is_valid()
+        form.save(commit=True)
+
+        self.assertIs(valid, True)  # Valid despite password empty/mismatch.
+        self.assertIs(user.has_usable_password(), False)
