@@ -98,9 +98,26 @@ class SetPasswordMixin(forms.Form):
     error_messages = {
         "password_mismatch": _("The two password fields didn’t match."),
     }
+    usable_help_text = _(
+        "Whether the user will be able to authenticate using a password or not. "
+        "If disabled, they may still be able to authenticate using other backends, "
+        "such as Single Sign-On or LDAP."
+    )
+
+    usable_password = forms.ChoiceField(
+        label=_("Password-based authentication"),
+        required=False,
+        initial="true",
+        choices={"true": _("Enabled"), "false": _("Disabled")},
+        widget=forms.RadioSelect(
+            attrs={"class": "radiolist inline"},
+        ),
+        help_text=usable_help_text,
+    )
     password1 = forms.CharField(
         label=_("Password"),
         strip=False,
+        required=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
         help_text=password_validation.password_validators_help_text_html(),
     )
@@ -108,15 +125,35 @@ class SetPasswordMixin(forms.Form):
         label=_("Password confirmation"),
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
         strip=False,
+        required=False,
         help_text=_("Enter the same password as before, for verification."),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, extra_warning=None, **kwargs):
         super().__init__(*args, **kwargs)
+        if extra_warning:
+            self.fields["usable_password"].help_text += (
+                f'<ul id="id_unusable_warning" class="messagelist">'
+                f'<li class="warning">{extra_warning}</li></ul>'
+            )
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        if self.data.get("usable_password") == "true" and not password1:
+            raise ValidationError(
+                self.fields["password1"].error_messages["required"], code="required"
+            )
+        return password1
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
+        if self.data.get("usable_password") == "false":
+            return password2
+        if not password2:
+            raise ValidationError(
+                self.fields["password2"].error_messages["required"], code="required"
+            )
         if password1 and password2 and password1 != password2:
             raise ValidationError(
                 self.error_messages["password_mismatch"],
@@ -125,7 +162,10 @@ class SetPasswordMixin(forms.Form):
         return password2
 
     def set_password_and_save(self, user, commit=True):
-        user.set_password(self.cleaned_data["password1"])
+        if self.cleaned_data["usable_password"] == "true":
+            user.set_password(self.cleaned_data["password1"])
+        else:
+            user.set_unusable_password()
         if commit:
             user.save()
             if hasattr(self, "save_m2m"):
@@ -194,7 +234,7 @@ class UserChangeForm(forms.ModelForm):
         label=_("Password"),
         help_text=_(
             "Raw passwords are not stored, so there is no way to see this "
-            "user’s password, but you can change the password using "
+            "user’s password, but you can change or unset the password using "
             '<a href="{}">this form</a>.'
         ),
     )
@@ -208,6 +248,11 @@ class UserChangeForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         password = self.fields.get("password")
         if password:
+            if self.instance and not self.instance.has_usable_password():
+                password.help_text = _(
+                    "Enable password-based authentication for this user by setting "
+                    'a password using <a href="{}">this form</a>.'
+                )
             password.help_text = password.help_text.format(
                 f"../../{self.instance.pk}/password/"
             )
@@ -482,9 +527,14 @@ class AdminPasswordChangeForm(SetPasswordMixin, forms.Form):
     """
 
     required_css_class = "required"
+    password_lost_warning = _(
+        "If disabled, the current password for this user will be lost."
+    )
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
+        if user.has_usable_password():
+            kwargs["extra_warning"] = self.password_lost_warning
         super().__init__(*args, **kwargs)
 
     def clean_password2(self):
@@ -495,10 +545,9 @@ class AdminPasswordChangeForm(SetPasswordMixin, forms.Form):
     @property
     def changed_data(self):
         data = super().changed_data
-        for name in self.fields:
-            if name not in data:
-                return []
-        return ["password"]
+        if "usable_password" in data or "password1" in data and "password2" in data:
+            return ["password"]
+        return []
 
     def save(self, commit=True):
         """Save the new password."""

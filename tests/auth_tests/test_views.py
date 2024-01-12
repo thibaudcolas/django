@@ -1429,7 +1429,7 @@ class ChangelistTests(AuthViewsTestCase):
         row = LogEntry.objects.latest("id")
         self.assertEqual(row.get_change_message(), "No fields changed.")
 
-    def test_user_change_password(self):
+    def test_user_with_usable_password_change_password(self):
         user_change_url = reverse(
             "auth_test_admin:auth_user_change", args=(self.admin.pk,)
         )
@@ -1440,14 +1440,24 @@ class ChangelistTests(AuthViewsTestCase):
         response = self.client.get(user_change_url)
         # Test the link inside password field help_text.
         rel_link = re.search(
-            r'you can change the password using <a href="([^"]*)">this form</a>',
+            r'change or unset the password using <a href="([^"]*)">this form</a>',
             response.content.decode(),
         )[1]
         self.assertEqual(urljoin(user_change_url, rel_link), password_change_url)
 
+        response = self.client.get(password_change_url)
+        # Test the form title with original (usable) password
+        self.assertContains(response, "<h1>Change password")  # Title
+        self.assertContains(response, "&rsaquo; Change password")  # Breadcrumb
+        self.assertContains(response, 'value="Change password"')  # Submit button
+        self.assertNotContains(response, "<h1>Set password")
+        self.assertNotContains(response, "&rsaquo; Set password")
+        self.assertNotContains(response, 'value="Set password"')
+
         response = self.client.post(
             password_change_url,
             {
+                "usable_password": "true",
                 "password1": "password1",
                 "password2": "password1",
             },
@@ -1457,6 +1467,47 @@ class ChangelistTests(AuthViewsTestCase):
         self.assertEqual(row.get_change_message(), "Changed password.")
         self.logout()
         self.login(password="password1")
+
+    def test_user_with_unusable_password_change_password(self):
+        # Test for title with unusable password with a test user
+        test_user = User.objects.get(email="staffmember@example.com")
+        test_user.set_unusable_password()
+        test_user.save()
+        user_change_url = reverse(
+            "auth_test_admin:auth_user_change", args=(test_user.pk,)
+        )
+        password_change_url = reverse(
+            "auth_test_admin:auth_user_password_change", args=(test_user.pk,)
+        )
+
+        response = self.client.get(user_change_url)
+        # Test the link inside password field help_text.
+        rel_link = re.search(
+            r'by setting a password using <a href="([^"]*)">this form</a>',
+            response.content.decode(),
+        )[1]
+        self.assertEqual(urljoin(user_change_url, rel_link), password_change_url)
+
+        response = self.client.get(password_change_url)
+        # Test the form title with original (usable) password
+        self.assertContains(response, "<h1>Set password")  # Title
+        self.assertContains(response, "&rsaquo; Set password")  # Breadcrumb
+        self.assertContains(response, 'value="Set password"')  # Submit button
+        self.assertNotContains(response, "<h1>Change password")
+        self.assertNotContains(response, "&rsaquo; Change password")
+        self.assertNotContains(response, 'value="Change password"')
+
+        response = self.client.post(
+            password_change_url,
+            {
+                "usable_password": "true",
+                "password1": "password1",
+                "password2": "password1",
+            },
+        )
+        self.assertRedirects(response, user_change_url)
+        row = LogEntry.objects.latest("id")
+        self.assertEqual(row.get_change_message(), "Changed password.")
 
     def test_user_change_different_user_password(self):
         u = User.objects.get(email="staffmember@example.com")

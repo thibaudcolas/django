@@ -66,7 +66,7 @@ class UserAdmin(admin.ModelAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("username", "password1", "password2"),
+                "fields": ("username", "usable_password", "password1", "password2"),
             },
         ),
     )
@@ -187,8 +187,13 @@ class UserAdmin(admin.ModelAdmin):
         fieldsets = [(None, {"fields": list(form.base_fields)})]
         admin_form = admin.helpers.AdminForm(form, fieldsets, {})
 
+        if user.has_usable_password():
+            title = _("Change password: %s")
+        else:
+            title = _("Set password: %s")
+
         context = {
-            "title": _("Change password: %s") % escape(user.get_username()),
+            "title": title % escape(user.get_username()),
             "adminForm": admin_form,
             "form_url": form_url,
             "form": form,

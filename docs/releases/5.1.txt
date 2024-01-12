@@ -45,6 +45,10 @@ Minor features
 * The default iteration count for the PBKDF2 password hasher is increased from
   720,000 to 870,000.
 
+* Improved password management in the User model now allows admins to enable or
+  disable password-based authentication by setting a usable or unusable
+  password, applicable in user creation and change forms.
+
 :mod:`django.contrib.contenttypes`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
