@@ -2,11 +2,10 @@
 Accessibility
 =============
 
-The Django project is committed to being accessible to everyone
-in all possible ways.
-We work to conform to established accessibility standards,
-and also to meet our own targets for supporting specific input devices
-and assistive technologies.
+The Django project is committed to being accessible to everyone in all
+possible ways. We work to conform to established accessibility standards, an
+also to meet our own targets for supporting specific input devices and
+assistive technologies.
 
 .. _accessibility-standards:
 
@@ -14,20 +13,20 @@ Accessibility standards
 =======================
 
 We work to conform with the `Web Content Accessibility Guidelines`_ (WCAG),
-version 2.2, at the AA level.
-WCAG is the most established standard for web accessibility.
-AA-level guidelines are the most common legal compliance target worldwide.
+version 2.2, at the AA level. WCAG is the most established standard for web
+accessibility. AA-level guidelines are the most common legal compliance target
+worldwide.
 
 We also attempt to follow other best practices, such as:
 
 * WCAG 2.2 AAA-level guidelines.
 * The upcoming `WCAG 3.0`_ guidelines.
-* `Authoring Tool Accessibility Guidelines`_ (ATAG) 2.0 – guidelines
-  for software and services that are used to produce web content.
+* `Authoring Tool Accessibility Guidelines`_ (ATAG) 2.0 – guidelines for
+  software and services that are used to produce web content.
 
-To learn more about accessibility without diving straight into standards,
-we recommend `The A11Y Project`_, a community-driven effort
-to make digital accessibility easier.
+To learn more about accessibility without diving straight into standards, we
+recommend `The A11Y Project`_, a community-driven effort to make digital
+accessibility easier.
 
 .. _Web Content Accessibility Guidelines: https://www.w3.org/TR/WCAG22/
 .. _WCAG 3.0: https://www.w3.org/TR/wcag-3.0/
@@ -40,11 +39,11 @@ Accessibility support targets
 =============================
 
 Beyond standards, we want to make sure Django actually works for people using
-a wide range of input devices and assistive technologies. This has benefits
-to make sure Django works better `for everyone`_.
-The best way to do this effectively is to take accessibility considerations
-into account as part of designing features. If in doubt, consult
-with users who rely on assistive technologies or with accessibility experts.
+a wide range of input devices and assistive technologies. This has benefits to
+make sure Django works better `for everyone`_. The best way to do this
+effectively is to take accessibility considerations into account as part of
+designing features. If in doubt, consult with users who rely on assistive
+technologies or with accessibility experts.
 
 .. _for everyone: https://en.wikipedia.org/wiki/Curb_cut_effect
 
@@ -53,10 +52,10 @@ with users who rely on assistive technologies or with accessibility experts.
 Accessibility testing baseline
 ------------------------------
 
-Design the UI with accessibility in mind,
-and the testing will only be needed as a final check. For more complex
-interfaces, confer with other contributors to decide on testing targets.
-Reach out to the `Accessibility team`_ for support and to coordinate testing
+Design the UI with accessibility in mind, and the testing will only be needed
+as a final check. For more complex interfaces, confer with other contributors
+to decide on testing targets. Reach out to the `Accessibility team`_ for
+support and to coordinate testing.
 
 Always test user interface changes with:
 
@@ -64,7 +63,7 @@ Always test user interface changes with:
 * The `Accessibility Insights`_ browser extension's automated checks feature,
   or an equivalent tool with the `Axe`_ checker.
 
-Where appropriate, also test with:
+Where the UI changes, also test with:
 
 * Touch-only navigation
 * 400% browser zoom
@@ -75,8 +74,8 @@ Where appropriate, also test with:
 Assistive technologies
 ----------------------
 
-Where more extensive testing is appropriate,
-here are popular free assistive technologies we recommend testing with:
+Where more extensive testing is appropriate, here are popular free assistive
+technologies we recommend testing with:
 
 * `NVDA`_ on Windows with Firefox ESR
 * `VoiceOver`_ on macOS with Safari
@@ -108,9 +107,10 @@ Where expert help is available, also consider testing with:
 Known issues and how to help
 ============================
 
-There are some parts of Django that do not meet our accessibility targets at the moment.
-We actively work on fixing issues, both as part of ongoing maintenance
-and bigger overhauls. To learn about known issues, and get involved, see:
+There are some parts of Django that do not meet our accessibility targets at
+the moment. We actively work on fixing issues, both as part of ongoing
+maintenance and bigger overhauls. To learn about known issues, and get
+involved, see:
 
 * ``#accessibility`` on the `Django Discord server`_.
 * `Accessibility issues on the ticket tracker`_.
