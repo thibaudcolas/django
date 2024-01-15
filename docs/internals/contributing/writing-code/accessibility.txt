@@ -63,7 +63,7 @@ Always test user interface changes with:
 * The `Accessibility Insights`_ browser extension's automated checks feature,
   or an equivalent tool with the `Axe`_ checker.
 
-Where the UI changes, also test with:
+Where the UI changes could affect those modalities, also test with:
 
 * Touch-only navigation
 * 400% browser zoom
@@ -74,8 +74,8 @@ Where the UI changes, also test with:
 Assistive technologies
 ----------------------
 
-Where more extensive testing is appropriate, here are popular free assistive
-technologies we recommend testing with:
+Where the UI changes could affect assistive technologies, here are popular
+free options we recommend testing with:
 
 * `NVDA`_ on Windows with Firefox ESR
 * `VoiceOver`_ on macOS with Safari
@@ -86,7 +86,8 @@ technologies we recommend testing with:
 * VoiceOver on iOS, or TalkBack on Android
 * `Contrast themes`_ on Windows
 
-Where expert help is available, also consider testing with:
+If you have the expertise or you can work with someone who does, also test
+with:
 
 * `JAWS`_ on Windows
 * `Dragon`_ on Windows
