@@ -336,13 +336,13 @@ inherit the permissions of the concrete model they subclass::
 
     class Person(models.Model):
         class Meta:
-            permissions = [("can_eat_pizzas", "Can eat pizzas")]
+            permissions = [("can_eat_pizzas", _("Can eat pizzas"))]
 
 
     class Student(Person):
         class Meta:
             proxy = True
-            permissions = [("can_deliver_pizzas", "Can deliver pizzas")]
+            permissions = [("can_deliver_pizzas", _("Can deliver pizzas"))]
 
 .. code-block:: pycon
 
